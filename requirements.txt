@@ -1,0 +1,6 @@
+aiotg
+aiocron
+parsel
+transmissionrpc
+pytz
+python-dateutil
