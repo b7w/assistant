@@ -2,7 +2,7 @@ node() {
     checkoutStage()
     testStage()
     buildImageStage()
-    deployImageStage()
+    deployImageStage(   )
 }
 
 
@@ -28,7 +28,7 @@ def testStage() {
 
 def buildImageStage() {
     stage('Build') {
-        def img = docker.build('b7w.me/assistant')
+        def img = docker.build('b7w/assistant')
         img.push(env.BUILD_ID)
         img.push('latest')
    }
