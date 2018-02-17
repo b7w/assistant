@@ -1,10 +1,15 @@
-pipeline {
-    agent none
+node() {
+    checkoutStage()
+    testStage()
+}
 
-    stages {
-        testStage()
+
+def checkoutStage() {
+    stage('Checkout') {
+        checkout scm
     }
 }
+
 
 def testStage() {
     stage('Test') {
