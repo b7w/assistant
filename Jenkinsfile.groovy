@@ -1,6 +1,8 @@
 node() {
     checkoutStage()
     testStage()
+    buildImageStage()
+    deployImageStage()
 }
 
 
@@ -22,4 +24,18 @@ def testStage() {
             junit 'target/results.xml'
        }
     }
+}
+
+def buildImageStage() {
+    stage('Build') {
+        def img = docker.build('b7w.me/assistant')
+        img.push(env.BUILD_ID)
+        img.push('latest')
+   }
+}
+
+def deployImageStage() {
+    stage('Deploy') {
+        echo('cool')
+   }
 }
