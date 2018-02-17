@@ -30,7 +30,7 @@ def testStage() {
 
 def buildImageStage() {
     stage('Build') {
-        withDockerRegistry('https://registry.b7w.me', 'registry.b7w.me') {
+        withDockerRegistry(uri: 'https://registry.b7w.me', credentialsId: 'registry.b7w.me') {
             def img = docker.build('b7w/assistant')
             img.push(env.BUILD_ID)
             img.push('latest')
