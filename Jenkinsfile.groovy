@@ -40,10 +40,15 @@ def buildImageStage() {
 
 def deployImageStage() {
     stage('Deploy') {
-        ansiblePlaybook(
-            playbook: 'ansible/playbook.yml',
-            inventory: 'ansible/hosts.ini',
-            credentialsId: 'dev.loc'
-        )
+        docker.image('python:3.6-slim').inside {
+            withEnv(['XDG_CACHE_HOME=target/pip']) {
+                sh('pip3 install ansible')
+            }
+            withCredentials([file(credentialsId: 'b7w.loc', variable: 'KEY')]) {
+                withCredentials([file(credentialsId: 'ansible_vault', variable: 'VAULT')]) {
+                    sh("ansible-playbook --private-key=$KEY --vault-password-file=$VAULT --inventory=ansible/hosts.ini ansible/playbook.yml")
+                }
+            }
+        }
    }
 }
