@@ -40,6 +40,10 @@ def buildImageStage() {
 
 def deployImageStage() {
     stage('Deploy') {
-        echo('cool')
+        ansiblePlaybook(
+            playbook: 'ansible/playbook.yml',
+            inventory: 'ansible/hosts.ini',
+            credentialsId: 'dev.loc'
+        )
    }
 }

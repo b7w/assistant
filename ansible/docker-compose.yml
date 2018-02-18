@@ -1,0 +1,14 @@
+version: "2.1"
+services:
+    app:
+        image: registry.b7w.me/b7w/assistant:latest
+        restart: always
+        environment:
+            - TRANSMISSION_URL={{ transmission_url }}
+            - TELEGRAM_BOT_TOKEN={{ telegram_bot_token }}
+            - ETH_WALLETS={{ eth_wallets }}
+        logging:
+            driver: json-file
+            options:
+                max-file: "4"
+                max-size: "4m"
