@@ -44,8 +44,10 @@ def deployImageStage() {
             withEnv(['XDG_CACHE_HOME=target/pip']) {
                 sh('pip3 install ansible')
             }
-            withCredentials([sshUserPrivateKey(credentialsId: 'dev.loc', keyFileVariable: 'KEY')]) {
-                withCredentials([file(credentialsId: 'ansible_vault', variable: 'VAULT')]) {
+            withEnv(['ANSIBLE_HOST_KEY_CHECKING=False']) {
+                def key = sshUserPrivateKey(credentialsId: 'dev.loc', keyFileVariable: 'KEY')
+                def vault = file(credentialsId: 'ansible_vault', variable: 'VAULT')
+                withCredentials([key, vault]) {
                     sh("ansible-playbook -vvvv --private-key=$KEY --vault-password-file=$VAULT --inventory=ansible/hosts.ini ansible/playbook.yml")
                 }
             }
