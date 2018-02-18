@@ -1,7 +1,7 @@
 node() {
     checkoutStage()
-    //testStage()
-    //buildImageStage()
+    testStage()
+    buildImageStage()
     deployImageStage(   )
 }
 
@@ -41,14 +41,13 @@ def buildImageStage() {
 def deployImageStage() {
     stage('Deploy') {
         docker.image('python:3.6-slim').inside {
-            withEnv(['XDG_CACHE_HOME=target/pip']) {
+            withEnv(['XDG_CACHE_HOME=target/pip', 'ANSIBLE_HOST_KEY_CHECKING=False']) {
                 sh('pip3 install ansible')
-            }
-            withEnv(['ANSIBLE_HOST_KEY_CHECKING=False']) {
+
                 def key = sshUserPrivateKey(credentialsId: 'dev.loc', keyFileVariable: 'KEY')
                 def vault = file(credentialsId: 'ansible_vault', variable: 'VAULT')
                 withCredentials([key, vault]) {
-                    sh("ansible-playbook -vvvv --private-key=$KEY --vault-password-file=$VAULT --inventory=ansible/hosts.ini ansible/playbook.yml")
+                    sh("ansible-playbook --private-key=$KEY --vault-password-file=$VAULT --inventory=ansible/hosts.ini ansible/playbook.yml -e build_id=${env.BUILD_ID}")
                 }
             }
         }

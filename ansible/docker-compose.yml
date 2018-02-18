@@ -1,7 +1,7 @@
 version: "2.1"
 services:
     app:
-        image: registry.b7w.me/b7w/assistant:latest
+        image: registry.b7w.me/b7w/assistant:{{ build_id }}
         restart: always
         environment:
             - TRANSMISSION_URL={{ transmission_url }}
