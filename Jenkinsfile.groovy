@@ -38,11 +38,6 @@ def buildImageStage() {
             img.push(env.BUILD_ID)
             img.push('latest')
         }
-        docker.withRegistry('https://051710529395.dkr.ecr.eu-west-1.amazonaws.com', '051710529395.dkr.ecr.eu-west-1.amazonaws.com') {
-            def img = docker.build('b7w/assistant')
-            img.push(env.BUILD_ID)
-            img.push('latest')
-        }
    }
 }
 
