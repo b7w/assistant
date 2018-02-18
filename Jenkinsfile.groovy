@@ -1,7 +1,7 @@
 node() {
     checkoutStage()
-    #testStage()
-    #buildImageStage()
+    //testStage()
+    //buildImageStage()
     deployImageStage(   )
 }
 
