@@ -1,7 +1,7 @@
 node() {
     checkoutStage()
-    testStage()
-    buildImageStage()
+    #testStage()
+    #buildImageStage()
     deployImageStage(   )
 }
 
@@ -46,7 +46,7 @@ def deployImageStage() {
             }
             withCredentials([sshUserPrivateKey(credentialsId: 'dev.loc', keyFileVariable: 'KEY')]) {
                 withCredentials([file(credentialsId: 'ansible_vault', variable: 'VAULT')]) {
-                    sh("ansible-playbook --private-key=$KEY --vault-password-file=$VAULT --inventory=ansible/hosts.ini ansible/playbook.yml")
+                    sh("ansible-playbook -vvvv --private-key=$KEY --vault-password-file=$VAULT --inventory=ansible/hosts.ini ansible/playbook.yml")
                 }
             }
         }
