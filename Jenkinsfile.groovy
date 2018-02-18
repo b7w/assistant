@@ -14,16 +14,19 @@ def checkoutStage() {
 
 
 def testStage() {
-    docker.image('python:3.6-slim').inside {
-        stage('Test') {
+    stage('Test') {
+        docker.image('python:3.6-slim').inside {
             withEnv(['XDG_CACHE_HOME=target/pip']) {
                 sh('pip3 install -r requirements.txt')
                 sh('pip3 install pytest')
             }
-            withEnv(['ETH_WALLETS=addr1,addr2']) {
-                sh('pytest --junitxml target/results.xml')
+            try {
+                withEnv(['ETH_WALLETS=addr1,addr2']) {
+                    sh('pytest --junitxml target/results.xml')
+                }
+            } finally {
+                junit 'target/results.xml'
             }
-            junit 'target/results.xml'
        }
     }
 }
@@ -31,6 +34,11 @@ def testStage() {
 def buildImageStage() {
     stage('Build') {
         docker.withRegistry('https://registry.b7w.me') {
+            def img = docker.build('b7w/assistant')
+            img.push(env.BUILD_ID)
+            img.push('latest')
+        }
+        docker.withRegistry('051710529395.dkr.ecr.eu-west-1.amazonaws.com', '051710529395.dkr.ecr.eu-west-1.amazonaws.com') {
             def img = docker.build('b7w/assistant')
             img.push(env.BUILD_ID)
             img.push('latest')
