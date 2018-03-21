@@ -16,7 +16,7 @@ def checkoutStage() {
 def testStage() {
     stage('Test') {
         docker.image('python:3.6-slim').inside {
-            withEnv(['XDG_CACHE_HOME=target/pip']) {
+            withEnv(['XDG_CACHE_HOME=target']) {
                 sh('pip3 install -r requirements.txt')
                 sh('pip3 install pytest')
             }
@@ -44,7 +44,7 @@ def buildImageStage() {
 def deployImageStage() {
     stage('Deploy') {
         docker.image('python:3.6-slim').inside {
-            withEnv(['XDG_CACHE_HOME=target/pip', 'ANSIBLE_HOST_KEY_CHECKING=False']) {
+            withEnv(['XDG_CACHE_HOME=target', 'ANSIBLE_HOST_KEY_CHECKING=False']) {
                 sh('pip3 install ansible')
 
                 def key = sshUserPrivateKey(credentialsId: 'dev.loc', keyFileVariable: 'KEY')
