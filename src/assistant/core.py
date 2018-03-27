@@ -2,7 +2,6 @@
 
 import asyncio
 import logging
-import math
 import os
 import pprint
 import re
@@ -39,7 +38,7 @@ async def _retrieve_page(url):
 def _find_rate(rates, from_name, to_name):
     for rate in rates:
         if rate['category'] == 'DebitCardsTransfers' and rate['fromCurrency']['name'] == from_name and \
-                rate['toCurrency']['name'] == to_name:
+            rate['toCurrency']['name'] == to_name:
             return (Decimal(rate['buy']) + Decimal(rate['sell'])) / 2
 
 
@@ -129,16 +128,17 @@ def _extract_number(page, query):
 
 
 async def weather():
-    yandex_page = await _retrieve_page('https://yandex.ru/pogoda/moscow/')
-    gismeteo_page = await _retrieve_page('https://www.gismeteo.ru/weather-moscow-4368/now/')
+    page = await _retrieve_page('https://yandex.ru/pogoda/moscow/')
 
-    comment = yandex_page.css('.fact__condition::text').extract_first()
-    yandex = _extract_number(yandex_page, '.fact__temp .temp__value::text')
-    gismeteo = _extract_number(gismeteo_page, '.nowvalue__text_l::text')
-    logger.debug('comment: %s, yandex: %s, gismeteo: %s', comment, yandex, gismeteo)
+    temp = page.css('.fact__temp .temp__value::text').extract_first()
+    comment = page.css('.day-anchor::text').extract_first()
+    feels_like = page.css('.fact__feels-like .temp__value::text').extract_first()
+    yesterday = page.css('.fact__yesterday .temp__value::text').extract_first()
 
-    temp = math.floor((int(yandex) + int(gismeteo)) / 2)
-    return f'Сейчас в Москве {comment}\nТемпература {temp:+}°C'
+    return f'Сейчас в Москве {comment}, ' \
+           f'Температура {temp}°C\n' \
+           f'Ощущается как {feels_like}°C\n' \
+           f'Вчера в это время {yesterday}°C'
 
 
 async def add_torrent(bot, document):
