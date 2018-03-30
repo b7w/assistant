@@ -135,8 +135,7 @@ async def weather():
     feels_like = page.css('.fact__feels-like .temp__value::text').extract_first()
     yesterday = page.css('.fact__yesterday .temp__value::text').extract_first()
 
-    return f'Сейчас в Москве {comment}, ' \
-           f'Температура {temp}°C\n' \
+    return f'Температура {temp}°C\n\n' \
            f'Ощущается как {feels_like}°C\n' \
            f'Вчера в это время {yesterday}°C'
 
