@@ -131,7 +131,6 @@ async def weather():
     page = await _retrieve_page('https://yandex.ru/pogoda/moscow/')
 
     temp = page.css('.fact__temp .temp__value::text').extract_first()
-    comment = page.css('.day-anchor::text').extract_first()
     feels_like = page.css('.fact__feels-like .temp__value::text').extract_first()
     yesterday = page.css('.fact__yesterday .temp__value::text').extract_first()
 

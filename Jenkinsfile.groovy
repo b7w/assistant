@@ -1,8 +1,7 @@
 node() {
     checkoutStage()
     testStage()
-    buildImageStage()
-    deployImageStage()
+    buildAndDeployImageStage()
 }
 
 
@@ -31,18 +30,9 @@ def testStage() {
     }
 }
 
-def buildImageStage() {
-    stage('Build') {
-        docker.withRegistry('https://registry.b7w.me') {
-            def img = docker.build('b7w/assistant')
-            img.push(env.BUILD_ID)
-            img.push('latest')
-        }
-   }
-}
 
-def deployImageStage() {
-    stage('Deploy') {
+def buildAndDeployImageStage() {
+    stage('Build & Deploy') {
         docker.image('python:3.6-slim').inside {
             withEnv(['XDG_CACHE_HOME=target', 'ANSIBLE_HOST_KEY_CHECKING=False']) {
                 sh('pip3 install ansible')

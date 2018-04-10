@@ -9,6 +9,39 @@
     - 'config.yml'
 
   tasks:
+    - name: Log into registry
+      docker_login:
+        registry: '{{ registry.host }}'
+        username: '{{ registry.username }}'
+        password: '{{ registry.password }}'
+        reauthorize: yes
+
+    - name: Build and push
+      docker_image:
+        path: .
+        name: '{{ registry.host }}/b7w/assistant:{{ version }}'
+        push: yes
+        force: true
+
+    - name: Push {{ version }} tag
+      docker_image:
+        name: '{{ registry.host }}/b7w/assistant:{{ version }}'
+        repository: '{{ registry.host }}/b7w/assistant:latest'
+        push: yes
+        force: true
+
+    - name: Clear latest image
+      docker_image:
+        state: absent
+        name: '{{ registry.host }}/b7w/assistant'
+        tag: 'latest'
+
+    - name: Clear {{ version }} image
+      docker_image:
+        state: absent
+        name: '{{ registry.host }}/b7w/assistant'
+        tag: '{{ version }}'
+
     - name: Create directory
       file:
         path: '{{ compose_path }}'
