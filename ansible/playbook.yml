@@ -3,8 +3,6 @@
   hosts: localhost
   connection: local
   gather_facts: false
-  vars:
-    version: '0.1'
   vars_files:
     - 'config.yml'
   tasks:
@@ -17,7 +15,7 @@
 
     - name: Build and push
       docker_image:
-        path: .
+        path: ..
         name: '{{ registry.host }}/b7w/assistant:{{ build_id }}'
         push: yes
         force: true
