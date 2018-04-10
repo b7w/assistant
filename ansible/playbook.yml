@@ -19,13 +19,13 @@
     - name: Build and push
       docker_image:
         path: .
-        name: '{{ registry.host }}/b7w/assistant:{{ version }}'
+        name: '{{ registry.host }}/b7w/assistant:{{ build_id }}'
         push: yes
         force: true
 
-    - name: Push {{ version }} tag
+    - name: Push {{ build_id }} tag
       docker_image:
-        name: '{{ registry.host }}/b7w/assistant:{{ version }}'
+        name: '{{ registry.host }}/b7w/assistant:{{ build_id }}'
         repository: '{{ registry.host }}/b7w/assistant:latest'
         push: yes
         force: true
@@ -36,11 +36,11 @@
         name: '{{ registry.host }}/b7w/assistant'
         tag: 'latest'
 
-    - name: Clear {{ version }} image
+    - name: Clear {{ build_id }} image
       docker_image:
         state: absent
         name: '{{ registry.host }}/b7w/assistant'
-        tag: '{{ version }}'
+        tag: '{{ build_id }}'
 
     - name: Create directory
       file:
