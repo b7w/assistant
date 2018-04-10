@@ -35,7 +35,7 @@ def buildAndDeployImageStage() {
     stage('Build & Deploy') {
         docker.image('python:3.6-slim').inside {
             withEnv(['XDG_CACHE_HOME=target', 'ANSIBLE_HOST_KEY_CHECKING=False']) {
-                sh('pip3 install ansible')
+                sh('pip3 install ansible docker-py')
 
                 def key = sshUserPrivateKey(credentialsId: 'dev.loc', keyFileVariable: 'KEY')
                 def vault = file(credentialsId: 'ansible_vault', variable: 'VAULT')

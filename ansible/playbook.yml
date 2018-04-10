@@ -1,13 +1,12 @@
-- name: Deploy assistant
-  hosts: all
-  gather_facts: yes
-
+---
+- name: Build and push docker image
+  hosts: localhost
+  connection: local
+  gather_facts: false
   vars:
-    compose_path: 'assistant'
-
+    version: '0.1'
   vars_files:
     - 'config.yml'
-
   tasks:
     - name: Log into registry
       docker_login:
@@ -42,6 +41,15 @@
         name: '{{ registry.host }}/b7w/assistant'
         tag: '{{ build_id }}'
 
+
+- name: Deploy assistant
+  hosts: all
+  gather_facts: yes
+  vars:
+    compose_path: 'assistant'
+  vars_files:
+    - 'config.yml'
+  tasks:
     - name: Create directory
       file:
         path: '{{ compose_path }}'
