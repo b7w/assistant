@@ -7,7 +7,6 @@ services:
             - SOCKS5_PROXY_URL={{ socks5_proxy_url }}
             - SOCKS5_PROXY_CREDENTIALS={{ socks5_proxy_credentials }}
             - TRANSMISSION_URL={{ transmission_url }}
-            - TRANSMISSION_URL={{ transmission_url }}
             - TELEGRAM_BOT_TOKEN={{ telegram_bot_token }}
             - ETH_WALLETS={{ eth_wallets }}
         logging:
