@@ -8,6 +8,7 @@ from decimal import Decimal
 from aiotg import Bot, Chat
 
 from assistant import core
+from assistant.utils import create_proxy_session
 
 bot = Bot(os.environ['TELEGRAM_BOT_TOKEN'])
 
@@ -111,6 +112,7 @@ async def default(chat, message):
 
 async def main():
     try:
+        bot._session = create_proxy_session()
         await bot.loop()
     except Exception as e:
         logger.exception(e)

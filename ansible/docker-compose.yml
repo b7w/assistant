@@ -1,9 +1,12 @@
 version: "2.1"
 services:
     app:
-        image: registry.b7w.me/b7w/assistant:{{ build_id }}
+        image: '{{ registry.host }}/b7w/assistant:{{ build_id }}'
         restart: always
         environment:
+            - SOCKS5_PROXY_URL={{ socks5_proxy_url }}
+            - SOCKS5_PROXY_CREDENTIALS={{ socks5_proxy_credentials }}
+            - TRANSMISSION_URL={{ transmission_url }}
             - TRANSMISSION_URL={{ transmission_url }}
             - TELEGRAM_BOT_TOKEN={{ telegram_bot_token }}
             - ETH_WALLETS={{ eth_wallets }}

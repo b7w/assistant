@@ -4,3 +4,4 @@ parsel
 transmissionrpc
 pytz
 python-dateutil
+aiosocks
