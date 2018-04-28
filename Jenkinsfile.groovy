@@ -1,6 +1,4 @@
 
-String DOCKER_OPTS = "-v/var/jenkins:/var/jenkins"
-
 node() {
     checkoutStage()
     testStage()
@@ -17,7 +15,7 @@ def checkoutStage() {
 
 def testStage() {
     stage('Test') {
-        docker.image('python:3.6-slim').inside(DOCKER_OPTS) {
+        docker.image('python:3.6-slim').inside("-v/var/jenkins:/var/jenkins") {
             withEnv(['XDG_CACHE_HOME=/var/jenkins']) {
                 sh('pip3 install -r requirements.txt')
                 sh('pip3 install pytest')
@@ -36,7 +34,7 @@ def testStage() {
 
 def buildAndDeployImageStage() {
     stage('Build & Deploy') {
-        docker.image('python:3.6-slim').inside(DOCKER_OPTS) {
+        docker.image('python:3.6-slim').inside("-v/var/jenkins:/var/jenkins") {
             withEnv(['XDG_CACHE_HOME=/var/jenkins', 'ANSIBLE_HOST_KEY_CHECKING=False']) {
                 sh('pip3 install ansible docker-py')
 
