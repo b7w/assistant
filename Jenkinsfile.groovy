@@ -1,3 +1,6 @@
+
+String DOCKER_OPTS = "-v/var/jenkins:/var/jenkins"
+
 node() {
     checkoutStage()
     testStage()
@@ -14,8 +17,8 @@ def checkoutStage() {
 
 def testStage() {
     stage('Test') {
-        docker.image('python:3.6-slim').inside {
-            withEnv(['XDG_CACHE_HOME=target']) {
+        docker.image('python:3.6-slim').inside(DOCKER_OPTS) {
+            withEnv(['XDG_CACHE_HOME=/var/jenkins']) {
                 sh('pip3 install -r requirements.txt')
                 sh('pip3 install pytest')
             }
@@ -24,7 +27,7 @@ def testStage() {
                     sh('pytest --junitxml target/results.xml')
                 }
             } finally {
-                junit 'target/results.xml'
+                junit('target/results.xml')
             }
        }
     }
@@ -33,8 +36,8 @@ def testStage() {
 
 def buildAndDeployImageStage() {
     stage('Build & Deploy') {
-        docker.image('python:3.6-slim').inside {
-            withEnv(['XDG_CACHE_HOME=target', 'ANSIBLE_HOST_KEY_CHECKING=False']) {
+        docker.image('python:3.6-slim').inside(DOCKER_OPTS) {
+            withEnv(['XDG_CACHE_HOME=/var/jenkins', 'ANSIBLE_HOST_KEY_CHECKING=False']) {
                 sh('pip3 install ansible docker-py')
 
                 def key = sshUserPrivateKey(credentialsId: 'dev.loc', keyFileVariable: 'KEY')
