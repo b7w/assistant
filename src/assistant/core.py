@@ -35,17 +35,19 @@ async def _retrieve_page(url):
             return Selector(text=data)
 
 
-def _find_rate(rates, from_name, to_name):
+def _find_rate(rates, from_name, to_name, operation=None):
     for rate in rates:
         if rate['category'] == 'DebitCardsTransfers' and rate['fromCurrency']['name'] == from_name and \
             rate['toCurrency']['name'] == to_name:
+            if operation is not None:
+                return Decimal(rate[operation])
             return (Decimal(rate['buy']) + Decimal(rate['sell'])) / 2
 
 
-def find_rate(rates, from_name, to_name):
-    rate = _find_rate(rates, from_name, to_name)
+def find_rate(rates, from_name, to_name, operation=None):
+    rate = _find_rate(rates, from_name, to_name, operation=operation)
     if rate is None:
-        rate = 1 / _find_rate(rates, to_name, from_name)
+        rate = 1 / _find_rate(rates, to_name, from_name, operation=operation)
     return rate
 
 
@@ -74,18 +76,18 @@ async def _retrieve_eth_wallet_balance(address):
 
 async def rates(header='Курсы валют'):
     rates = await _retrieve_rates()
-    usd = find_rate(rates, 'USD', 'RUB')
-    eur = find_rate(rates, 'EUR', 'RUB')
+    usd_rub = find_rate(rates, 'USD', 'RUB')
+    eur_rub = find_rate(rates, 'EUR', 'RUB')
+    eur_usd = find_rate(rates, 'EUR', 'USD', operation='buy')
     rates = await _retrieve_yobit_rates()
     yobit = {k: Decimal(v['avg']) for k, v in rates.items()}
     return f'{header}\n' \
-           f'USD: {usd:.2f}\n' \
-           f'EUR: {eur:.2f}\n' \
+           f'USD/RUB: {usd_rub:.2f}\n' \
+           f'EUR/RUB: {eur_rub:.2f}\n' \
+           f'EUR\u2192USD: {eur_usd:.2f}\n' \
            f'BTC/USD: {yobit["btc_usd"]:.2f}\n' \
-           f'ETZ/USD: {yobit["etz_usd"]:.2f}\n' \
            f'ETH/USD: {yobit["eth_usd"]:.2f}\n' \
-           f'XEM/USD: {yobit["xem_usd"]:.2f}\n' \
-           f'XEM/ETH: {yobit["xem_eth"]:.8f}'
+           f'XEM/USD: {yobit["xem_usd"]:.2f}\n'
 
 
 async def yobit():
