@@ -53,7 +53,7 @@ async def rates(chat: Chat, match):
 async def weather(chat: Chat, match):
     logger.debug('chat: %s, command: weather', chat.id)
     try:
-        message = await core.weather()
+        message = await core.yandex_weather()
         await chat.send_text(message)
     except Exception as e:
         logger.exception(e)
