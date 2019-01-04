@@ -4,7 +4,7 @@ import os
 import aiohttp
 from aiohttp_socks import SocksConnector
 
-SOCKS5_PROXY_URL = os.environ['SOCKS5_PROXY_URL']
+SOCKS5_PROXY_URL = os.environ.get('SOCKS5_PROXY_URL', '')
 
 
 def create_proxy_session():

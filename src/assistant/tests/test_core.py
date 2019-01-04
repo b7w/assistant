@@ -19,6 +19,7 @@ class TestWeather(unittest.TestCase):
         self.assertIn('Температура', result)
 
 
+@unittest.skip('Need to setup env.SOCKS5_PROXY_URL')
 class TestYobitRates(unittest.TestCase):
     def setUp(self):
         dictConfig(LOGGING)

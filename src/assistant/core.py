@@ -16,9 +16,9 @@ from assistant.utils import create_proxy_session
 
 logger = logging.getLogger(__name__)
 
-NOTIFICATION_CONSUMERS = os.environ['NOTIFICATION_CONSUMERS'].split(',')
-TORRENT_CONSUMERS = os.environ['TORRENT_CONSUMERS'].split(',')
-ETH_WALLETS = os.environ['ETH_WALLETS'].split(',')
+NOTIFICATION_CONSUMERS = os.environ.get('NOTIFICATION_CONSUMERS', '').split(',')
+TORRENT_CONSUMERS = os.environ.get('TORRENT_CONSUMERS', '').split(',')
+ETH_WALLETS = os.environ.get('ETH_WALLETS', '').split(',')
 
 
 async def _retrieve_rates():
@@ -40,7 +40,7 @@ async def _retrieve_page(url):
 def _find_rate(rates, from_name, to_name, operation=None):
     for rate in rates:
         if rate['category'] == 'DebitCardsTransfers' and rate['fromCurrency']['name'] == from_name and \
-            rate['toCurrency']['name'] == to_name:
+            rate['toCurrency']['name' ] == to_name:
             if operation is not None:
                 return Decimal(rate[operation])
             return (Decimal(rate['buy']) + Decimal(rate['sell'])) / 2

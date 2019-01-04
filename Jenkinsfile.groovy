@@ -15,15 +15,13 @@ def checkoutStage() {
 
 def testStage() {
     stage('Test') {
-        docker.image('python:3.6-slim').inside("-v/var/jenkins:/var/jenkins") {
+        docker.image('python:3.7-slim').inside("-v/var/jenkins:/var/jenkins") {
             withEnv(['XDG_CACHE_HOME=/var/jenkins']) {
                 sh('pip3 install -r requirements.txt')
                 sh('pip3 install pytest')
             }
             try {
-                withEnv(['ETH_WALLETS=addr1,addr2']) {
-                    sh('pytest --junitxml target/results.xml')
-                }
+                sh('pytest --junitxml target/results.xml')
             } finally {
                 junit('target/results.xml')
             }
@@ -34,7 +32,7 @@ def testStage() {
 
 def buildAndDeployImageStage() {
     stage('Build & Deploy') {
-        docker.image('python:3.6-slim').inside("-v/var/jenkins:/var/jenkins") {
+        docker.image('python:3.7-slim').inside("-v/var/jenkins:/var/jenkins") {
             withEnv(['XDG_CACHE_HOME=/var/jenkins', 'ANSIBLE_HOST_KEY_CHECKING=False']) {
                 sh('pip3 install ansible docker-py')
 
