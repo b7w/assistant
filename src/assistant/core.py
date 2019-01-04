@@ -16,8 +16,8 @@ from assistant.utils import create_proxy_session
 
 logger = logging.getLogger(__name__)
 
-NOTIFICATION_CONSUMERS = ["105720423"]
-TORRENT_CONSUMERS = ["105720423"]
+NOTIFICATION_CONSUMERS = os.environ['NOTIFICATION_CONSUMERS'].split(',')
+TORRENT_CONSUMERS = os.environ['TORRENT_CONSUMERS'].split(',')
 ETH_WALLETS = os.environ['ETH_WALLETS'].split(',')
 
 

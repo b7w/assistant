@@ -4,6 +4,8 @@ services:
         image: '{{ registry.host }}/b7w/assistant:{{ build_id }}'
         restart: always
         environment:
+            - NOTIFICATION_CONSUMERS={{ notification_consumers }}
+            - TORRENT_CONSUMERS={{ torrent_consumers }}
             - SOCKS5_PROXY_URL={{ socks5_proxy_url }}
             - TRANSMISSION_URL={{ transmission_url }}
             - TELEGRAM_BOT_TOKEN={{ telegram_bot_token }}
