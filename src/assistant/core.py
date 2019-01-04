@@ -131,7 +131,7 @@ def _extract_number(page, query):
     return value.replace(chr(8722), '-')
 
 
-async def weather():
+async def yandex_weather():
     page = await _retrieve_page('https://yandex.ru/pogoda/moscow/')
 
     temp = page.css('.fact__temp .temp__value::text').extract_first()

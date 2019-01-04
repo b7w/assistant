@@ -15,7 +15,7 @@ class TestWeather(unittest.TestCase):
         self.loop = asyncio.get_event_loop()
 
     def test_real_http_call(self):
-        result = self.loop.run_until_complete(core.weather())
+        result = self.loop.run_until_complete(core.yandex_weather())
         self.assertIn('Температура', result)
 
 
