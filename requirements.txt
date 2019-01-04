@@ -1,8 +1,8 @@
-aiohttp==2.3.10
-aiotg
-aiocron
-parsel
-transmissionrpc
+aiohttp==3.5.*
+aiotg==0.9.*
+aiocron==1.3
+parsel==1.5.*
+transmissionrpc==0.11
 pytz
-python-dateutil
-aiosocks
+python-dateutil==2.7.*
+aiohttp_socks==0.2.*

@@ -1,0 +1,9 @@
+registry:
+    host: 'registry.example.com'
+    username: 'user'
+    password: 'password'
+
+socks5_proxy_url: 'socks5://user:password@proxy.exmaple.com:1080'
+transmission_url: '172.17.1.100:user:password'
+telegram_bot_token: '999999999:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+eth_wallets: '0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'

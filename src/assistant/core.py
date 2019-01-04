@@ -12,6 +12,8 @@ import aiohttp
 import transmissionrpc
 from parsel import Selector
 
+from assistant.utils import create_proxy_session
+
 logger = logging.getLogger(__name__)
 
 NOTIFICATION_CONSUMERS = ["105720423"]
@@ -53,7 +55,7 @@ def find_rate(rates, from_name, to_name, operation=None):
 
 async def _retrieve_yobit_rates():
     url = 'https://yobit.io/api/3/ticker/eth_usd-etz_usd-xem_eth-xem_usd-btc_usd'
-    async with aiohttp.ClientSession() as session:
+    async with create_proxy_session() as session:
         async with session.get(url) as resp:
             logger.debug('GET %s with status: %s', url, resp.status)
             res = await resp.json(content_type='text/html')
@@ -82,12 +84,12 @@ async def rates(header='Курсы валют'):
     rates = await _retrieve_yobit_rates()
     yobit = {k: Decimal(v['avg']) for k, v in rates.items()}
     return f'{header}\n' \
-           f'USD/RUB: {usd_rub:.2f}\n' \
-           f'EUR/RUB: {eur_rub:.2f}\n' \
-           f'EUR\u2192USD: {eur_usd:.2f}\n' \
-           f'BTC/USD: {yobit["btc_usd"]:.2f}\n' \
-           f'ETH/USD: {yobit["eth_usd"]:.2f}\n' \
-           f'XEM/USD: {yobit["xem_usd"]:.2f}\n'
+        f'USD/RUB: {usd_rub:.2f}\n' \
+        f'EUR/RUB: {eur_rub:.2f}\n' \
+        f'EUR\u2192USD: {eur_usd:.2f}\n' \
+        f'BTC/USD: {yobit["btc_usd"]:.2f}\n' \
+        f'ETH/USD: {yobit["eth_usd"]:.2f}\n' \
+        f'XEM/USD: {yobit["xem_usd"]:.2f}\n'
 
 
 async def yobit():
@@ -137,8 +139,8 @@ async def weather():
     yesterday = page.css('.fact__yesterday .temp__value::text').extract_first()
 
     return f'Температура {temp}°C\n\n' \
-           f'Ощущается как {feels_like}°C\n' \
-           f'Вчера в это время {yesterday}°C'
+        f'Ощущается как {feels_like}°C\n' \
+        f'Вчера в это время {yesterday}°C'
 
 
 async def add_torrent(bot, document):
