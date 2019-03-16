@@ -22,6 +22,7 @@ async def help(chat: Chat, match):
             "rate code amount - Currency calculator\n"
             "weather - Current temperature\n"
             "wallets - Wallets\n"
+            "workday - Workday\n"
             "report - Combine all commands")
     await chat.send_text(help.strip(''))
 
@@ -82,12 +83,24 @@ async def yobit(chat: Chat, match):
         await chat.send_text('System error')
 
 
+@bot.command("workday")
+async def workday(chat: Chat, match):
+    logger.debug('chat: %s, command: workday', chat.id)
+    try:
+        message = core.workday()
+        await chat.send_text(message)
+    except Exception as e:
+        logger.exception(e)
+        await chat.send_text('System error')
+
+
 @bot.command("report")
 async def report(chat: Chat, match):
     logger.debug('chat: %s, command: report', chat.id)
     await weather(chat, match)
     await rates(chat, match)
     await wallets(chat, match)
+    await workday(chat, match)
 
 
 @bot.handle('document')

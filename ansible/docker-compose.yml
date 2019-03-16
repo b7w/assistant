@@ -10,6 +10,7 @@ services:
             - TRANSMISSION_URL={{ transmission_url }}
             - TELEGRAM_BOT_TOKEN={{ telegram_bot_token }}
             - ETH_WALLETS={{ eth_wallets }}
+            - FIRST_WORK_DAY={{ first_work_day }}
         logging:
             driver: json-file
             options:

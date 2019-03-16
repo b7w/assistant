@@ -6,19 +6,21 @@ import os
 import pprint
 import re
 import tempfile
+from datetime import datetime, date
 from decimal import Decimal
 
 import aiohttp
 import transmissionrpc
 from parsel import Selector
 
-from assistant.utils import create_proxy_session
+from assistant.utils import create_proxy_session, is_cycle_day
 
 logger = logging.getLogger(__name__)
 
 NOTIFICATION_CONSUMERS = os.environ.get('NOTIFICATION_CONSUMERS', '').split(',')
 TORRENT_CONSUMERS = os.environ.get('TORRENT_CONSUMERS', '').split(',')
 ETH_WALLETS = os.environ.get('ETH_WALLETS', '').split(',')
+FIRST_WORK_DAY = date.fromisoformat(os.environ.get('FIRST_WORK_DAY', datetime.now().date().isoformat()))
 
 
 async def _retrieve_rates():
@@ -40,7 +42,7 @@ async def _retrieve_page(url):
 def _find_rate(rates, from_name, to_name, operation=None):
     for rate in rates:
         if rate['category'] == 'DebitCardsTransfers' and rate['fromCurrency']['name'] == from_name and \
-            rate['toCurrency']['name' ] == to_name:
+            rate['toCurrency']['name'] == to_name:
             if operation is not None:
                 return Decimal(rate[operation])
             return (Decimal(rate['buy']) + Decimal(rate['sell'])) / 2
@@ -171,3 +173,9 @@ async def wallets(addresses):
         bal_usd = bal * rate
         message += f'{adr[:8]}  ETH: {bal:.4f} USD: {bal_usd:.2f} USD/EHT: {rate:.2f}\n'
     return message
+
+
+def workday():
+    if is_cycle_day(FIRST_WORK_DAY, datetime.now()):
+        return 'Сегодня рабочий день'
+    return 'Сегодня нерабочий день'
