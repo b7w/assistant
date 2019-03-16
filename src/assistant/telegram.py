@@ -19,9 +19,10 @@ logger = logging.getLogger(__name__)
 async def help(chat: Chat, match):
     logger.debug('chat: %s, command: help', chat.id)
     help = ("rates - Tinkoff currency rate\n"
-            "rate code amount - Currency calculator\n"
+            "rate - Currency calculator\n"
             "weather - Current temperature\n"
             "wallets - Wallets\n"
+            "yobit - Yobit\n"
             "workday - Workday\n"
             "report - Combine all commands")
     await chat.send_text(help.strip(''))
