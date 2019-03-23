@@ -24,6 +24,10 @@ class TestIsCycleDay(unittest.TestCase):
         self.assertFalse(is_cycle_day(self.start, self._shift_start_date(3)))
         self.assertTrue(is_cycle_day(self.start, self._shift_start_date(4)))
 
+    def test_day_with_shift(self):
+        self.assertTrue(is_cycle_day(self.start, self._shift_start_date(5), shift=1))
+        self.assertTrue(is_cycle_day(self.start, self._shift_start_date(9), shift=1))
+
 
 if __name__ == '__main__':
     unittest.main()

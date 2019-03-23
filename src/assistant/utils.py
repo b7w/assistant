@@ -12,6 +12,6 @@ def create_proxy_session():
     return aiohttp.ClientSession(connector=connector)
 
 
-def is_cycle_day(start, datetime, cycle=4):
+def is_cycle_day(start, datetime, cycle=4, shift=0):
     delta = start - datetime.date()
-    return delta.days % cycle == 0
+    return (delta.days + shift) % cycle == 0

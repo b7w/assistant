@@ -178,4 +178,6 @@ async def wallets(addresses):
 def workday():
     if is_cycle_day(FIRST_WORK_DAY, datetime.now()):
         return 'Сегодня рабочий день'
+    if is_cycle_day(FIRST_WORK_DAY, datetime.now(), shift=1):
+        return 'Сегодня отсыпной день'
     return 'Сегодня нерабочий день'
