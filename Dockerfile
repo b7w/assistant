@@ -21,10 +21,5 @@ COPY requirements.txt requirements.txt
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 
-# Create run scripts
-RUN echo "python main.py" >> start.sh \
-    && chmod +x start.sh
-
-
-# Start
-CMD "/app/start.sh"
+ENTRYPOINT ["python"]
+CMD ["main.py"]
