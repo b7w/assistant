@@ -13,7 +13,7 @@ import aiohttp
 import transmissionrpc
 from parsel import Selector
 
-from assistant.utils import create_proxy_session, is_cycle_day
+from assistant.utils import create_proxy_session, cycle_day_left, plural_days
 
 logger = logging.getLogger(__name__)
 
@@ -176,8 +176,15 @@ async def wallets(addresses):
 
 
 def workday():
-    if is_cycle_day(FIRST_WORK_DAY, datetime.now()):
+    return _workday(FIRST_WORK_DAY, datetime.now())
+
+
+def _workday(first_work_day, now):
+    left = cycle_day_left(first_work_day, now)
+    left_plus = cycle_day_left(first_work_day, now, shift=1)
+    print(left_plus)
+    if left == 0:
         return 'Сегодня рабочий день'
-    if is_cycle_day(FIRST_WORK_DAY, datetime.now(), shift=1):
+    if left_plus == 0:
         return 'Сегодня отсыпной день'
-    return 'Сегодня нерабочий день'
+    return f'Осталось {plural_days(left)} до рабочего дня'

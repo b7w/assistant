@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import unittest
+from datetime import datetime, timedelta
 from logging.config import dictConfig
 
 from assistant import core
@@ -30,6 +31,24 @@ class TestYobitRates(unittest.TestCase):
         logger.info('Yobit rates %s', result)
         self.assertIn('eth_usd', result)
         self.assertIn('xem_eth', result)
+
+
+class TestWorkDay(unittest.TestCase):
+    def setUp(self):
+        dictConfig(LOGGING)
+        self.first_work_day = datetime.now().date()
+
+    def _assert(self, days, text):
+        work_day = datetime.now() + timedelta(days=days)
+        result = core._workday(self.first_work_day, work_day)
+        self.assertEqual(text, result)
+
+    def test_workday(self):
+        self._assert(0, 'Сегодня рабочий день')
+        self._assert(1, 'Сегодня отсыпной день')
+        self._assert(2, 'Осталось 2 дня до рабочего дня')
+        self._assert(3, 'Осталось 1 день до рабочего дня')
+        self._assert(4, 'Сегодня рабочий день')
 
 
 if __name__ == '__main__':
