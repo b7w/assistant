@@ -65,7 +65,10 @@ def main():
     loop.add_signal_handler(signal.SIGTERM, stop)
     loop.create_task(telegram.main())
     loop.create_task(cron.main())
-    loop.run_forever()
+    try:
+        loop.run_forever()
+    finally:
+        loop.close()
     logger.info("Bye!")
 
 
