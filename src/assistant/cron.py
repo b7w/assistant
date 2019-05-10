@@ -34,5 +34,4 @@ async def main():
 
 
 def stop():
-    notify_morning_weather.stop()
     notify_money_rates.stop()

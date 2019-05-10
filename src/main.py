@@ -56,15 +56,17 @@ def main():
             logger.info("Stopping app..")
             telegram.stop()
             cron.stop()
+            loop.stop()
         except Exception as e:
             logger.exception(e)
 
-    signal.signal(signal.SIGINT, stop)
-
     loop = asyncio.get_event_loop()
+    loop.add_signal_handler(signal.SIGINT, stop)
+    loop.add_signal_handler(signal.SIGTERM, stop)
     loop.create_task(telegram.main())
     loop.create_task(cron.main())
     loop.run_forever()
+    logger.info("Bye!")
 
 
 if __name__ == '__main__':
