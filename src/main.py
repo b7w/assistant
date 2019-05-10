@@ -58,7 +58,7 @@ def main():
             cron.stop()
             loop.stop()
         except Exception as e:
-            logger.exception(e)
+            logger.info(str(e))
 
     loop = asyncio.get_event_loop()
     loop.add_signal_handler(signal.SIGINT, stop)
