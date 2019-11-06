@@ -32,7 +32,7 @@ steps:
           - echo "$VAULT" > /tmp/vault
           - echo "$PRIVATE_KEY" | base64 --decode
           - echo "$PRIVATE_KEY" | base64 --decode > /tmp/private_key
-          - ansible-playbook --private-key=/tmp/private_key --vault-password-file=/tmp/vault --inventory=ansible/hosts.ini ansible/playbook.yml
+          - ansible-playbook --private-key=/tmp/private_key --vault-password-file=/tmp/vault --inventory=ansible/hosts.ini ansible/playbook.yml -e build_id=$DRONE_JOB_NUMBER
 
 
 volumes:
