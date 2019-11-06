@@ -3,9 +3,9 @@ kind: pipeline
 name: Assistant CI/CD
 
 steps:
-    - name: Tests 1
+    - name: Tests
       pull: always
-      image: python:3.7-slim
+      image: python:3.8-slim
       environment:
           XDG_CACHE_HOME: tmp/pip
       commands:
@@ -15,7 +15,7 @@ steps:
 
     - name: Build & deploy
       pull: always
-      image: python:3.7-slim
+      image: python:3.8-slim
       privileged: true
       environment:
           XDG_CACHE_HOME: tmp/pip
