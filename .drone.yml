@@ -29,8 +29,7 @@ steps:
             path: /var/run/docker.sock
       commands:
           - pip3 install ansible docker-py
-          - echo "$VAULT" | base64 --decode
-          - echo "$VAULT" | base64 --decode > /tmp/vault
+          - echo "$VAULT" > /tmp/vault
           - echo "$PRIVATE_KEY" | base64 --decode
           - echo "$PRIVATE_KEY" | base64 --decode > /tmp/private_key
           - ansible-playbook --private-key=/tmp/private_key --vault-password-file=/tmp/vault --inventory=ansible/hosts.ini ansible/playbook.yml
