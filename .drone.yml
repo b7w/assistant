@@ -1,0 +1,41 @@
+---
+kind: pipeline
+name: Assistant CI/CD
+
+steps:
+    - name: Tests
+      pull: always
+      image: python:3.7-slim
+      environment:
+          XDG_CACHE_HOME: tmp/pip
+      commands:
+        - pip3 install poetry
+        - poetry install
+        - poetry run pytest
+
+    - name: Build & deploy
+      pull: always
+      image: python:3.7-slim
+      privileged: true
+      environment:
+          XDG_CACHE_HOME: tmp/pip
+          ANSIBLE_HOST_KEY_CHECKING: False
+          VAULT:
+              from_secret: VAULT
+          PRIVATE_KEY:
+              from_secret: PRIVATE_KEY
+      volumes:
+          - name: docker
+            path: /var/run/docker.sock
+      commands:
+          - pip3 install ansible docker-py
+          - echo "$VAULT" | base64 --decode > /tmp/vault
+          - echo "$PRIVATE_KEY" | base64 --decode
+          - echo "$PRIVATE_KEY" | base64 --decode > /tmp/private_key
+          - ansible-playbook --private-key=/tmp/private_key --vault-password-file=/tmp/vault --inventory=ansible/hosts.ini ansible/playbook.yml
+
+
+volumes:
+    - name: docker
+      host:
+          path: /var/run/docker.sock
