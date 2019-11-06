@@ -29,6 +29,7 @@ steps:
             path: /var/run/docker.sock
       commands:
           - pip3 install ansible docker-py
+          - echo "$VAULT" | base64 --decode
           - echo "$VAULT" | base64 --decode > /tmp/vault
           - echo "$PRIVATE_KEY" | base64 --decode
           - echo "$PRIVATE_KEY" | base64 --decode > /tmp/private_key
