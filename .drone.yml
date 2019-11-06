@@ -3,7 +3,7 @@ kind: pipeline
 name: Assistant CI/CD
 
 steps:
-    - name: Tests
+    - name: Tests 1
       pull: always
       image: python:3.7-slim
       environment:
