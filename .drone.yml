@@ -13,6 +13,14 @@ steps:
         - poetry install
         - poetry run pytest
 
+    - name: Docker build and push
+      image: plugins/docker
+      settings:
+        repo: registry.b7w.me/b7w/assistant
+        tags:
+          - 'latest'
+          - '$$BUILD_NUMBER'
+
     - name: Build & deploy
       pull: always
       image: python:3.8-slim
