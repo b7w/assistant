@@ -15,7 +15,7 @@ steps:
 
     - name: Build & deploy
       pull: always
-      image: python:3.8-slim
+      image: python:3.7-slim
       network_mode: host
       privileged: true
       environment:
@@ -34,6 +34,7 @@ steps:
           - echo "$VAULT" > /tmp/vault
           - echo "$PRIVATE_KEY" | base64 --decode > /tmp/private_key
           - chmod 600 /tmp/private_key
+          - export ANSIBLE_HOST_KEY_CHECKING=False
           - ansible-playbook --private-key=/tmp/private_key --vault-password-file=/tmp/vault --inventory=ansible/hosts.ini ansible/playbook.yml -e build_id=$DRONE_JOB_NUMBER
 
 
