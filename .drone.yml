@@ -15,7 +15,7 @@ steps:
 
     - name: Build & deploy
       pull: always
-      image: python:3.7-slim
+      image: python:3.8-slim
       network_mode: host
       privileged: true
       environment:
