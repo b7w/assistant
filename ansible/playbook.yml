@@ -15,17 +15,19 @@
 
     - name: Build and push
       docker_image:
-        path: ..
+        build:
+          path: ..
         name: '{{ registry.host }}/b7w/assistant:{{ build_id }}'
         push: yes
-        force: true
+        force_source: true
+        force_tag: true
 
     - name: Push {{ build_id }} tag
       docker_image:
         name: '{{ registry.host }}/b7w/assistant:{{ build_id }}'
         repository: '{{ registry.host }}/b7w/assistant:latest'
         push: yes
-        force: true
+        force_tag: true
 
     - name: Clear latest image
       docker_image:

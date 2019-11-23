@@ -128,7 +128,7 @@ async def currency_calculator(amount, currency):
 
 
 def _extract_number(page, query):
-    number_pattern = r'[-+' + chr(8722) + ']?\d+'
+    number_pattern = r'[-+' + chr(8722) + ']?\\d+'
     value = page.css(query).re_first(number_pattern)
     return value.replace(chr(8722), '-')
 
