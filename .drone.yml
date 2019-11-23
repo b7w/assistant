@@ -32,7 +32,7 @@ steps:
           - apt-get update -qq && apt-get install -yqq openssh-client sshpass
           - pip3 install ansible docker-py
           - echo "$VAULT" > /tmp/vault
-          - echo "$PRIVATE_KEY" | base64 --decode > /tmp/private_key
+          - echo "$PRIVATE_KEY" > /tmp/private_key
           - chmod 600 /tmp/private_key
           - export ANSIBLE_HOST_KEY_CHECKING=False
           - ansible-playbook --private-key=/tmp/private_key --vault-password-file=/tmp/vault --inventory=ansible/hosts.ini ansible/playbook.yml -e build_id=$DRONE_JOB_NUMBER
