@@ -13,17 +13,10 @@ steps:
         - poetry install
         - poetry run pytest
 
-    - name: Docker build and push
-      image: plugins/docker
-      settings:
-        repo: registry.b7w.me/b7w/assistant
-        tags:
-          - 'latest'
-          - '$$BUILD_NUMBER'
-
     - name: Build & deploy
       pull: always
       image: python:3.8-slim
+      network_mode: host
       privileged: true
       environment:
           XDG_CACHE_HOME: tmp/pip
@@ -38,7 +31,6 @@ steps:
       commands:
           - pip3 install ansible docker-py
           - echo "$VAULT" > /tmp/vault
-          - echo "$PRIVATE_KEY" | base64 --decode
           - echo "$PRIVATE_KEY" | base64 --decode > /tmp/private_key
           - ansible-playbook --private-key=/tmp/private_key --vault-password-file=/tmp/vault --inventory=ansible/hosts.ini ansible/playbook.yml -e build_id=$DRONE_JOB_NUMBER
 
