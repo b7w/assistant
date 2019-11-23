@@ -1,17 +1,4 @@
 ---
-- name: Install utils
-  hosts: localhost
-  connection: local
-  gather_facts: false
-  vars_files:
-    - 'config.yml'
-  tasks:
-    - name: Install ssh
-      apt:
-          name: openssh-client
-          update_cache: yes
-
-
 - name: Deploy assistant
   hosts: all
   gather_facts: false

@@ -29,6 +29,7 @@ steps:
           - name: docker
             path: /var/run/docker.sock
       commands:
+          - apt-get update -qq && apt-get install -yqq openssh-client
           - pip3 install ansible docker-py
           - echo "$VAULT" > /tmp/vault
           - echo "$PRIVATE_KEY" | base64 --decode > /tmp/private_key
