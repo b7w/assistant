@@ -13,12 +13,14 @@ RUN apt-get update -qq && \
 # Copy files
 WORKDIR /app
 
-COPY src .
-COPY requirements.txt requirements.txt
+COPY src /app/
+COPY pyproject.toml poetry.lock /app/
 
 
 # Setup
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir poetry && \
+    poetry config settings.virtualenvs.create false && \
+    poetry install --no-dev --no-interaction
 
 
 ENTRYPOINT ["python"]
