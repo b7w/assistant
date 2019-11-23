@@ -3,15 +3,15 @@ kind: pipeline
 name: Assistant CI/CD
 
 steps:
-    - name: Tests
-      pull: always
-      image: python:3.8-slim
-      environment:
-          XDG_CACHE_HOME: tmp/pip
-      commands:
-        - pip3 install poetry
-        - poetry install
-        - poetry run pytest
+#    - name: Tests
+#      pull: always
+#      image: python:3.8-slim
+#      environment:
+#          XDG_CACHE_HOME: tmp/pip
+#      commands:
+#        - pip3 install poetry
+#        - poetry install
+#        - poetry run pytest
 
     - name: Build & deploy
       pull: always
@@ -29,13 +29,13 @@ steps:
           - name: docker
             path: /var/run/docker.sock
       commands:
-          - apt-get update -qq && apt-get install -yqq openssh-client sshpass
-          - pip3 install ansible docker-py
-          - echo "$VAULT" > /tmp/vault
-          - echo "$PRIVATE_KEY" > /tmp/private_key
-          - chmod 600 /tmp/private_key
-          - export ANSIBLE_HOST_KEY_CHECKING=False
-          - ansible-playbook --private-key=/tmp/private_key --vault-password-file=/tmp/vault --inventory=ansible/hosts.ini ansible/playbook.yml -e build_id=$DRONE_JOB_NUMBER
+          - env
+#          - apt-get update -qq && apt-get install -yqq openssh-client sshpass
+#          - pip3 install ansible docker-py
+#          - echo "$VAULT" > /tmp/vault
+#          - echo "$PRIVATE_KEY" > /tmp/private_key
+#          - chmod 600 /tmp/private_key
+#          - ansible-playbook --private-key=/tmp/private_key --vault-password-file=/tmp/vault --inventory=ansible/hosts.ini ansible/playbook.yml -e build_id=$DRONE_JOB_NUMBER
 
 
 volumes:
