@@ -182,7 +182,8 @@ def workday():
 def _workday(first_work_day, now):
     left = cycle_day_left(first_work_day, now)
     left_plus = cycle_day_left(first_work_day, now, shift=1)
-    print(left_plus)
+    if left == 1:
+        return 'Завтра рабочий день'
     if left == 0:
         return 'Сегодня рабочий день'
     if left_plus == 0:
