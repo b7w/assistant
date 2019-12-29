@@ -41,7 +41,8 @@ async def _retrieve_page(url):
 
 def _find_rate(rates, from_name, to_name, operation=None):
     for rate in rates:
-        if rate['category'] == 'DebitCardsTransfers' and rate['fromCurrency']['name'] == from_name and \
+        if rate['category'] == 'DebitCardsTransfers' and \
+            rate['fromCurrency']['name'] == from_name and \
             rate['toCurrency']['name'] == to_name:
             if operation is not None:
                 return Decimal(rate[operation])
@@ -86,12 +87,12 @@ async def rates(header='Курсы валют'):
     rates = await _retrieve_yobit_rates()
     yobit = {k: Decimal(v['avg']) for k, v in rates.items()}
     return f'{header}\n' \
-        f'USD/RUB: {usd_rub:.2f}\n' \
-        f'EUR/RUB: {eur_rub:.2f}\n' \
-        f'EUR\u2192USD: {eur_usd:.2f}\n' \
-        f'BTC/USD: {yobit["btc_usd"]:.2f}\n' \
-        f'ETH/USD: {yobit["eth_usd"]:.2f}\n' \
-        f'XEM/USD: {yobit["xem_usd"]:.2f}\n'
+           f'USD/RUB: {usd_rub:.2f}\n' \
+           f'EUR/RUB: {eur_rub:.2f}\n' \
+           f'EUR\u2192USD: {eur_usd:.2f}\n' \
+           f'BTC/USD: {yobit["btc_usd"]:.2f}\n' \
+           f'ETH/USD: {yobit["eth_usd"]:.2f}\n' \
+           f'XEM/USD: {yobit["xem_usd"]:.2f}\n'
 
 
 async def yobit():
@@ -141,8 +142,8 @@ async def yandex_weather():
     yesterday = page.css('.fact__yesterday .temp__value::text').extract_first()
 
     return f'Температура {temp}°C\n\n' \
-        f'Ощущается как {feels_like}°C\n' \
-        f'Вчера в это время {yesterday}°C'
+           f'Ощущается как {feels_like}°C\n' \
+           f'Вчера в это время {yesterday}°C'
 
 
 async def add_torrent(bot, document):
