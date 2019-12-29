@@ -47,7 +47,7 @@ class TestWorkDay(unittest.TestCase):
         self._assert(0, 'Сегодня рабочий день')
         self._assert(1, 'Сегодня отсыпной день')
         self._assert(2, 'Осталось 2 дня до рабочего дня')
-        self._assert(3, 'Осталось 1 день до рабочего дня')
+        self._assert(3, 'Завтра рабочий день')
         self._assert(4, 'Сегодня рабочий день')
 
 
