@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import logging
-import sys
 
 import aiocron
 
@@ -30,7 +29,7 @@ async def main():
         notify_money_rates.start()
     except Exception as e:
         logger.exception(e)
-        sys.exit(1)
+        raise e
 
 
 def stop():

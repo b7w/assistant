@@ -2,7 +2,6 @@
 
 import logging
 import os
-import sys
 from decimal import Decimal
 
 from aiotg import Bot, Chat
@@ -130,7 +129,7 @@ async def main():
         await bot.loop()
     except Exception as e:
         logger.exception(e)
-        sys.exit(1)
+        raise e
 
 
 def stop():
