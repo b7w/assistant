@@ -101,22 +101,22 @@ async def yobit():
 
 
 def parse_money(text: str):
-    amount = ''.join(re.findall(r'\d', text))
+    amount = re.findall(r'[\d.,]+', text)[0].replace(',', '.')
 
     def _text_contains(*items):
         return any(i in text.upper() for i in items)
 
     if _text_contains('$', 'USD'):
-        return int(amount), 'USD'
+        return Decimal(amount), 'USD'
     if _text_contains('€', 'EUR'):
-        return int(amount), 'EUR'
-    return int(amount), None
+        return Decimal(amount), 'EUR'
+    return Decimal(amount), None
 
 
 def _currency_calculator(rates, amount, from_currency, to_currency='RUB'):
     rate = find_rate(rates, from_currency, to_currency)
-    total = round(rate * amount)
-    return f'{amount} {from_currency} = {total} {to_currency}'
+    total = rate * amount
+    return f'{amount:.2f} {from_currency} = {total:.2f} {to_currency}'
 
 
 async def currency_calculator(amount, currency):

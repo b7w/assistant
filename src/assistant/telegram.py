@@ -2,7 +2,6 @@
 
 import logging
 import os
-from decimal import Decimal
 
 from aiotg import Bot, Chat
 
@@ -32,7 +31,7 @@ async def rate(chat: Chat, match):
     logger.debug('chat: %s, command: rate', chat.id)
     try:
         amount, currency = core.parse_money(match.group(1))
-        message = await core.currency_calculator(Decimal(amount), currency)
+        message = await core.currency_calculator(amount, currency)
         await chat.send_text(message)
     except Exception as e:
         logger.exception(e)
