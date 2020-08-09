@@ -20,6 +20,7 @@ NOTIFICATION_CONSUMERS = os.environ.get('NOTIFICATION_CONSUMERS', '').split(',')
 TORRENT_CONSUMERS = os.environ.get('TORRENT_CONSUMERS', '').split(',')
 ETH_WALLETS = os.environ.get('ETH_WALLETS', '').split(',')
 FIRST_WORK_DAY = date.fromisoformat(os.environ.get('FIRST_WORK_DAY', datetime.now().date().isoformat()))
+SECHENOV_DOCTORS = os.environ.get('SECHENOV_DOCTORS', '').split(',')
 
 
 async def _retrieve_rates():
@@ -176,3 +177,39 @@ def _workday(first_work_day, now):
     if left_plus == 0:
         return 'Сегодня отсыпной день'
     return f'Осталось {plural_days(left)} до рабочего дня'
+
+
+def _find_doctor(page, employee_name):
+    doctors = page.css('#all-doctors a.doc-name')
+    for el in doctors:
+        text = ''.join(el.css('::text').extract()).strip()
+        if employee_name.lower() in text.lower():
+            href = el.attrib['href']
+            return href, text
+    return None, None
+
+
+def _find_tickets(page):
+    talons = page.css('#calendar-content .talon .hour')
+    for tl in talons:
+        url = tl.attrib.get('data-url')
+        if url:
+            info = ' - '.join(reversed(tl.css('.hour-details p:first-child *::text').extract())).strip()
+            yield url, info
+
+
+async def sechenov_find_tickets(doctor):
+    root_url = 'https://lk.sechenovclinic.ru'
+    url = root_url + '/personal/schedule/record_wizard.php'
+    page = await _retrieve_page(url)
+
+    doc_url, doc_name = _find_doctor(page, doctor)
+
+    if doc_url:
+        logger.debug(f'Find doctor "{doc_name}", url - {root_url}/{doc_url}')
+        page = await _retrieve_page(root_url + doc_url)
+        tickets = list((root_url + f, doc_name + '\n' + s) for f, s in _find_tickets(page))
+        if tickets:
+            logger.info(f'Find {len(tickets)} tickets for "{doc_name}"')
+            return tickets
+    return []

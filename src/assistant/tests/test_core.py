@@ -51,5 +51,15 @@ class TestWorkDay(unittest.TestCase):
         self._assert(4, 'Сегодня рабочий день')
 
 
+class TestSechenovAppointment(unittest.TestCase):
+    def setUp(self):
+        dictConfig(LOGGING)
+        self.loop = asyncio.get_event_loop()
+
+    def test(self):
+        result = self.loop.run_until_complete(core.sechenov_find_tickets('Д'))
+        self.assertIsNotNone(result)
+
+
 if __name__ == '__main__':
     unittest.main()

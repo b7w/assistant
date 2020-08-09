@@ -102,6 +102,17 @@ async def report(chat: Chat, match):
     await workday(chat, match)
 
 
+@bot.command("sechenov (.+)")
+async def workday(chat: Chat, match):
+    logger.debug('chat: %s, command: workday', chat.id)
+    try:
+        ticket = await core.sechenov_find_tickets(match.group(1))
+        await chat.send_text('\n\n'.join(f'{text}\n\n{url}' for url, text in ticket))
+    except Exception as e:
+        logger.exception(e)
+        await chat.send_text('System error')
+
+
 @bot.handle('document')
 async def file_handler(chat, document):
     logger.debug('chat: %s, command: file_handler', chat.id)

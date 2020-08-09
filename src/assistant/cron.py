@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 @aiocron.crontab('00 21 * * 1-5', start=False)
-async def daley_notify():
+async def daily_notify():
     logger.info('Notify money rate')
     for user_id in core.NOTIFICATION_CONSUMERS:
         try:
@@ -24,13 +24,28 @@ async def daley_notify():
             logger.exception(e)
 
 
+@aiocron.crontab('0 8-22 * * *', start=False)
+async def sechenov_tickets_notify():
+    logger.debug('Notify sechenov tickets')
+    for user_id in core.NOTIFICATION_CONSUMERS:
+        try:
+            private = bot.private(user_id)
+            for doc in core.SECHENOV_DOCTORS:
+                message = await core.sechenov_find_tickets(doc)
+                await private.send_text(message)
+        except Exception as e:
+            logger.exception(e)
+
+
 async def main():
     try:
-        daley_notify.start()
+        daily_notify.start()
+        sechenov_tickets_notify.start()
     except Exception as e:
         logger.exception(e)
         raise e
 
 
 def stop():
-    daley_notify.stop()
+    daily_notify.stop()
+    sechenov_tickets_notify.stop()

@@ -11,6 +11,7 @@ services:
             - TELEGRAM_BOT_TOKEN={{ telegram_bot_token }}
             - ETH_WALLETS={{ eth_wallets }}
             - FIRST_WORK_DAY={{ first_work_day }}
+            - SECHENOV_DOCTORS={{ sechenov_doctors }}
         logging:
             driver: json-file
             options:
