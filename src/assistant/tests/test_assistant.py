@@ -2,8 +2,8 @@ import unittest
 from decimal import Decimal
 from logging.config import dictConfig
 
-from assistant.core import parse_money
 from assistant.tests import LOGGING
+from assistant.utils import parse_money
 
 
 class TestMoneyParse(unittest.TestCase):

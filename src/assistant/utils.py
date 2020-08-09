@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 import os
+import re
+from decimal import Decimal
 
 import aiohttp
 from aiohttp_socks import SocksConnector
@@ -28,3 +30,16 @@ def plural_days(n):
         p = 2
 
     return str(n) + ' ' + days[p]
+
+
+def parse_money(text: str):
+    amount = re.findall(r'[\d.,]+', text)[0].replace(',', '.')
+
+    def _text_contains(*items):
+        return any(i in text.upper() for i in items)
+
+    if _text_contains('$', 'USD'):
+        return Decimal(amount), 'USD'
+    if _text_contains('€', 'EUR'):
+        return Decimal(amount), 'EUR'
+    return Decimal(amount), None

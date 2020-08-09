@@ -6,7 +6,7 @@ import os
 from aiotg import Bot, Chat
 
 from assistant import core
-from assistant.utils import create_proxy_session
+from assistant.utils import create_proxy_session, parse_money
 
 bot = Bot(os.environ['TELEGRAM_BOT_TOKEN'])
 
@@ -30,7 +30,7 @@ async def help(chat: Chat, match):
 async def rate(chat: Chat, match):
     logger.debug('chat: %s, command: rate', chat.id)
     try:
-        amount, currency = core.parse_money(match.group(1))
+        amount, currency = parse_money(match.group(1))
         message = await core.currency_calculator(amount, currency)
         await chat.send_text(message)
     except Exception as e:

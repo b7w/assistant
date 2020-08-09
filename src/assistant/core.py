@@ -4,7 +4,6 @@ import asyncio
 import logging
 import os
 import pprint
-import re
 import tempfile
 from datetime import datetime, date
 from decimal import Decimal
@@ -98,19 +97,6 @@ async def rates(header='Курсы валют'):
 async def yobit():
     data = await _retrieve_yobit_rates()
     return 'Yobit\n' + pprint.pformat(data)
-
-
-def parse_money(text: str):
-    amount = re.findall(r'[\d.,]+', text)[0].replace(',', '.')
-
-    def _text_contains(*items):
-        return any(i in text.upper() for i in items)
-
-    if _text_contains('$', 'USD'):
-        return Decimal(amount), 'USD'
-    if _text_contains('€', 'EUR'):
-        return Decimal(amount), 'EUR'
-    return Decimal(amount), None
 
 
 def _currency_calculator(rates, amount, from_currency, to_currency='RUB'):
