@@ -12,7 +12,7 @@ import aiohttp
 import transmissionrpc
 from parsel import Selector
 
-from assistant.utils import create_proxy_session, cycle_day_left, plural_days
+from assistant.utils import create_proxy_session, cycle_day_left, plural_days, parse_temperature
 
 logger = logging.getLogger(__name__)
 
@@ -32,11 +32,22 @@ async def _retrieve_rates():
 
 
 async def _retrieve_page(url):
-    async with aiohttp.ClientSession() as session:
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:79.0) Gecko/20100101 Firefox/79.0',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Date': datetime.now().isoformat(),
+    }
+    async with aiohttp.ClientSession(headers=headers) as session:
         async with session.get(url) as resp:
             logger.debug('GET %s with status: %s', url, resp.status)
             data = await resp.text()
-            return Selector(text=data)
+            if resp.status == 200:
+                return Selector(text=data)
+            raise Exception(f'Wrong status code: {resp.status}')
 
 
 def _find_rate(rates, from_name, to_name, operation=None):
@@ -131,6 +142,17 @@ async def yandex_weather():
     return f'Температура {temp}°C\n\n' \
            f'Ощущается как {feels_like}°C\n' \
            f'Вчера в это время {yesterday}°C'
+
+
+async def accu_weather():
+    page = await _retrieve_page('https://www.accuweather.com/en/ru/moscow/294021/current-weather/294021')
+
+    temp = parse_temperature(page.css('.current-conditions-card .temperatures .value::text').extract_first())
+    feels_like = parse_temperature(page.css('.current-conditions-card .temperatures .realFeel::text').extract_first())
+    details = '\n'.join(i.strip() for i in page.css('.current-conditions-card .details-card p::text').extract())
+
+    return f'Температура {temp}°C, ощущается как {feels_like}°C\n\n' \
+           f'{details}'
 
 
 async def add_torrent(bot, document):

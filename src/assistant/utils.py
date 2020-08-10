@@ -43,3 +43,7 @@ def parse_money(text: str):
     if _text_contains('€', 'EUR'):
         return Decimal(amount), 'EUR'
     return Decimal(amount), None
+
+
+def parse_temperature(text: str):
+    return ''.join(re.findall(r'[-\d]', text))
