@@ -6,6 +6,7 @@ from logging.config import dictConfig
 
 from assistant import core
 from assistant.tests import LOGGING
+from assistant.utils import Storage
 
 logger = logging.getLogger(__name__)
 
@@ -68,8 +69,20 @@ class TestSechenovAppointment(unittest.TestCase):
         self.loop = asyncio.get_event_loop()
 
     def test(self):
-        result = self.loop.run_until_complete(core.sechenov_find_tickets('Д'))
-        self.assertIsNotNone(result)
+        storage = Storage()
+        result = self.loop.run_until_complete(core.sechenov_find_tickets(storage, 'Д'))
+        self.assertTrue(result)
+
+    def test_storage(self):
+        storage = Storage()
+
+        result = self.loop.run_until_complete(core.sechenov_find_tickets(storage, 'Д'))
+        self.assertTrue(storage.tickets)
+        self.assertTrue(result)
+
+        result = self.loop.run_until_complete(core.sechenov_find_tickets(storage, 'Д'))
+        self.assertTrue(storage.tickets)
+        self.assertFalse(result)
 
 
 if __name__ == '__main__':

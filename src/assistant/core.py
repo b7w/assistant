@@ -12,7 +12,7 @@ import aiohttp
 import transmissionrpc
 from parsel import Selector
 
-from assistant.utils import create_proxy_session, cycle_day_left, plural_days, parse_temperature
+from assistant.utils import create_proxy_session, cycle_day_left, plural_days, parse_temperature, Storage
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +21,8 @@ TORRENT_CONSUMERS = os.environ.get('TORRENT_CONSUMERS', '').split(',')
 ETH_WALLETS = os.environ.get('ETH_WALLETS', '').split(',')
 FIRST_WORK_DAY = date.fromisoformat(os.environ.get('FIRST_WORK_DAY', datetime.now().date().isoformat()))
 SECHENOV_DOCTORS = os.environ.get('SECHENOV_DOCTORS', '').split(',')
+
+storage = Storage()
 
 
 async def _retrieve_rates():
@@ -218,7 +220,7 @@ def _find_tickets(page):
             yield url, info
 
 
-async def sechenov_find_tickets(doctor):
+async def sechenov_find_tickets(store: Storage, doctor):
     root_url = 'https://lk.sechenovclinic.ru'
     url = root_url + '/personal/schedule/record_wizard.php'
     page = await _retrieve_page(url)
@@ -228,8 +230,9 @@ async def sechenov_find_tickets(doctor):
     if doc_url:
         logger.debug(f'Find doctor "{doc_name}", url - {root_url}/{doc_url}')
         page = await _retrieve_page(root_url + doc_url)
-        tickets = list((root_url + f, doc_name + '\n' + s) for f, s in _find_tickets(page))
+        tickets = set((root_url + f, doc_name + '\n' + s) for f, s in _find_tickets(page)) - store.tickets
         if tickets:
+            store.tickets.update(tickets)
             logger.info(f'Find {len(tickets)} tickets for "{doc_name}"')
             return tickets
-    return []
+    return set()

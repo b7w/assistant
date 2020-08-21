@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import re
+from dataclasses import dataclass, field
 from decimal import Decimal
 
 import aiohttp
@@ -47,3 +48,8 @@ def parse_money(text: str):
 
 def parse_temperature(text: str):
     return ''.join(re.findall(r'[-\d]', text))
+
+
+@dataclass
+class Storage:
+    tickets: set = field(default_factory=set)

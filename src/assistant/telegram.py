@@ -6,7 +6,7 @@ import os
 from aiotg import Bot, Chat
 
 from assistant import core
-from assistant.utils import create_proxy_session, parse_money
+from assistant.utils import create_proxy_session, parse_money, Storage
 
 bot = Bot(os.environ['TELEGRAM_BOT_TOKEN'])
 
@@ -103,10 +103,10 @@ async def report(chat: Chat, match):
 
 
 @bot.command("sechenov (.+)")
-async def workday(chat: Chat, match):
+async def sechenov_find_tickets(chat: Chat, match):
     logger.debug('chat: %s, command: workday', chat.id)
     try:
-        ticket = await core.sechenov_find_tickets(match.group(1))
+        ticket = await core.sechenov_find_tickets(Storage(), match.group(1))
         await chat.send_text('\n\n'.join(f'{text}\n\n{url}' for url, text in ticket))
     except Exception as e:
         logger.exception(e)
