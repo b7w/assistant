@@ -149,10 +149,8 @@ async def accu_weather():
 
     temp = parse_temperature(page.css('.current-conditions-card .temperatures .value::text').extract_first())
     feels_like = parse_temperature(page.css('.current-conditions-card .temperatures .realFeel::text').extract_first())
-    details = '\n'.join(i.strip() for i in page.css('.current-conditions-card .details-card p::text').extract())
 
-    return f'Температура {temp}°C, ощущается как {feels_like}°C\n\n' \
-           f'{details}'
+    return f'Температура {temp}°C, ощущается как {feels_like}°C'
 
 
 async def add_torrent(bot, document):

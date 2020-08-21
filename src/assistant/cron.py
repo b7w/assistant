@@ -31,8 +31,9 @@ async def sechenov_tickets_notify():
         try:
             private = bot.private(user_id)
             for doc in core.SECHENOV_DOCTORS:
-                message = await core.sechenov_find_tickets(doc)
-                await private.send_text(message)
+                tickets = await core.sechenov_find_tickets(doc)
+                for link, text in tickets:
+                    await private.send_text(f'{text}\n{link}')
         except Exception as e:
             logger.exception(e)
 
