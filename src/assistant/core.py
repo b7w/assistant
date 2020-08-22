@@ -234,5 +234,5 @@ async def sechenov_find_tickets(store: Storage, doctor):
         if tickets:
             store.tickets.update(tickets)
             logger.info(f'Find {len(tickets)} tickets for "{doc_name}"')
-            return tickets
-    return set()
+            return sorted(tickets)
+    return []
