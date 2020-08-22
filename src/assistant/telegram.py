@@ -106,8 +106,8 @@ async def report(chat: Chat, match):
 async def sechenov_find_tickets(chat: Chat, match):
     logger.debug('chat: %s, command: workday', chat.id)
     try:
-        ticket = await core.sechenov_find_tickets(Storage(), match.group(1))
-        await chat.send_text('\n\n'.join(f'{text}\n\n{url}' for url, text in ticket))
+        tickets = await core.sechenov_find_tickets(Storage(), match.group(1))
+        await chat.send_text('\n\n'.join(f'{text}\n\n{url}' for url, text in tickets))
     except Exception as e:
         logger.exception(e)
         await chat.send_text('System error')
