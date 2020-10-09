@@ -10,6 +10,10 @@ from aiohttp_socks import SocksConnector
 SOCKS5_PROXY_URL = os.environ.get('SOCKS5_PROXY_URL', '')
 
 
+def split(value: str):
+    return [i.strip() for i in value.split(',') if i.strip()]
+
+
 def create_proxy_session():
     connector = SocksConnector.from_url(SOCKS5_PROXY_URL)
     return aiohttp.ClientSession(connector=connector)

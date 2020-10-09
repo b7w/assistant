@@ -12,15 +12,15 @@ import aiohttp
 import transmissionrpc
 from parsel import Selector
 
-from assistant.utils import create_proxy_session, cycle_day_left, plural_days, parse_temperature, Storage
+from assistant.utils import split, create_proxy_session, cycle_day_left, plural_days, parse_temperature, Storage
 
 logger = logging.getLogger(__name__)
 
-NOTIFICATION_CONSUMERS = os.environ.get('NOTIFICATION_CONSUMERS', '').strip().split(',')
-TORRENT_CONSUMERS = os.environ.get('TORRENT_CONSUMERS', '').strip().split(',')
-ETH_WALLETS = os.environ.get('ETH_WALLETS', '').strip().split(',')
+NOTIFICATION_CONSUMERS = split(os.environ.get('NOTIFICATION_CONSUMERS', ''))
+TORRENT_CONSUMERS = split(os.environ.get('TORRENT_CONSUMERS', ''))
+ETH_WALLETS = split(os.environ.get('ETH_WALLETS', ''))
 FIRST_WORK_DAY = date.fromisoformat(os.environ.get('FIRST_WORK_DAY', datetime.now().date().isoformat()))
-SECHENOV_DOCTORS = os.environ.get('SECHENOV_DOCTORS', '').strip().split(',')
+SECHENOV_DOCTORS = split(os.environ.get('SECHENOV_DOCTORS', ''))
 
 storage = Storage()
 
