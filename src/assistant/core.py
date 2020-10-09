@@ -149,8 +149,8 @@ async def yandex_weather():
 async def accu_weather():
     page = await _retrieve_page('https://www.accuweather.com/en/ru/moscow/294021/current-weather/294021')
 
-    temp = parse_temperature(page.css('.current-conditions-card .temperatures .value::text').extract_first())
-    feels_like = parse_temperature(page.css('.current-conditions-card .temperatures .realFeel::text').extract_first())
+    temp = parse_temperature(page.css('.current-weather-info .display-temp::text').extract_first())
+    feels_like = parse_temperature(page.css('.current-weather-info .realfeel::text').extract_first())
 
     return f'Температура {temp}°C, ощущается как {feels_like}°C'
 
